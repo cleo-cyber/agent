@@ -1,6 +1,6 @@
 import os
 from typing import Annotated
-from tools import BasicToolNode
+from tools.tools import BasicToolNode
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from typing_extensions import TypedDict

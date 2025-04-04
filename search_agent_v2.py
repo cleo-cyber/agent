@@ -1,4 +1,5 @@
 import os 
+from config.config import Config
 from typing import Annotated
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
@@ -14,20 +15,17 @@ from langchain.tools.tavily_search import TavilySearchResults
 
 load_dotenv()
 
-os.environ['LANGSMITH_ENDPOINT']=os.getenv('LANGSMITH_ENDPOINT')
-os.environ['LANGSMITH_API_KEY']=os.getenv('LANGSMITH_API_KEY')
-os.environ["LANGSMITH_PROJECT"] = os.getenv('LANGSMITH_PROJECT')
-os.environ['GQOQ_API_KEY']=os.getenv('GQOQ_API_KEY')
-os.environ['TAVILY_API_KEY']=os.getenv('TAVILY_API_KEY')
+
+
+config=Config()
 GROQ_API_KEY=os.getenv('GQOQ_API_KEY')
 MODEL_NAME=os.getenv('MODEL_NAME')
-
 llm=ChatGroq(groq_api_key=GROQ_API_KEY, model_name=MODEL_NAME)
 
 memory=MemorySaver()
 
 @tool
-def human_assistance(query:str,tool_call_id: Annotated[str,InjectedToolCallId]):
+def human_assistance(tool_call_id: Annotated[str,InjectedToolCallId]):
     """
     Tool interruption for human assistance and verification
     """
@@ -57,7 +55,6 @@ def chatbot(state:State):
 
     assert len(message.tool_calls)<=1
     return {"messages":[message]}
-
 
 
 def build_graph():
@@ -107,7 +104,6 @@ if __name__== "__main__":
         except Exception as e:
             user_input='Failed to process'
             print(e)
-
             break
 
     
